@@ -1,0 +1,44 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-blue-950 to-indigo-900 py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+  <form (ngSubmit)="onSubmit()" [formGroup]="briefingForm" class="max-w-md w-full bg-gray-800 bg-opacity-75 backdrop-blur-md rounded-lg shadow-xl p-8">
+    <h2 class="text-3xl font-bold mb-6 text-gray-100 text-center">Flight Briefing</h2>
+
+    <div class="mb-6">
+      <label class="block mb-2 font-semibold text-gray-200">Meteorological Reports</label>
+      <div class="space-y-2">
+        <div class="flex items-center">
+          <input type="checkbox" formControlName="metar" id="metar" class="mr-2 bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-400">
+          <label for="metar" class="text-gray-300">METAR</label>
+        </div>
+        <div class="flex items-center">
+          <input type="checkbox" formControlName="taf" id="taf" class="mr-2 bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-400">
+          <label for="taf" class="text-gray-300">TAF</label>
+        </div>
+        <div class="flex items-center">
+          <input type="checkbox" formControlName="sigmet" id="sigmet" class="mr-2 bg-gray-700 border-gray-600 rounded text-blue-500 focus:ring-blue-400">
+          <label for="sigmet" class="text-gray-300">SIGMET</label>
+        </div>
+      </div>
+      <div *ngIf="briefingForm.errors?.['atLeastOneReportRequired']" class="text-red-400 text-sm mt-1">
+        Please select at least one report type.
+      </div>
+    </div>
+
+    <div class="mb-6">
+      <label for="airports" class="block mb-2 font-semibold text-gray-200">Airports (ICAO codes)</label>
+      <input type="text" id="airports" formControlName="airports" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-gray-400" placeholder="e.g., EGLL KJFK">
+    </div>
+
+    <div class="mb-6">
+      <label for="countries" class="block mb-2 font-semibold text-gray-200">Countries (WMO codes)</label>
+      <input type="text" id="countries" formControlName="countries" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-gray-400" placeholder="e.g., 03 72">
+    </div>
+
+    <div *ngIf="briefingForm.errors?.['atLeastOneLocationRequired']" class="text-red-400 text-sm mb-4">
+      Please specify at least one airport or country code.
+    </div>
+
+    <button type="submit" [disabled]="!briefingForm.valid" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-800 disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed transition duration-150 ease-in-out">
+      Create Briefing
+    </button>
+  </form>
+</div>
