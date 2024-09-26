@@ -1,0 +1,57 @@
+<div class="bg-gray-900 border-solid border-2 border-gray-700 bg-opacity-75 backdrop-blur-md rounded-lg shadow-xl p-4">
+   <ng-container *ngIf="results && Object.keys(results).length; else elseBlock">
+      <h2 class="text-3xl font-bold my-6 text-gray-100 text-center">Pilot Briefing Product</h2>
+
+      <!-- <table class="w-full p-2 text-gray-200">
+         <ng-container *ngFor="let key of Object.keys(results)">
+            <thead>
+               <tr class="border-2 border-slate-600 w-full">
+                  <th class="p-1 bg-primary">{{ key }}</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr class="bg-gray-700 rounded-md" *ngFor="let flight of results[key]">
+                  <td class="border rounder-md border-l-2 border-slate-600 p-1">{{ flight.queryType }}</td>
+                  <td class="border border-slate-600 rounder-md p-1">{{ flight.reportTime | date: "d.M.Y HH:mm:ss" }}</td>
+                  <td
+                     class="border border-p-2 border-slate-600 rounder-md p-1"
+                     [appHighlightCondition]="flight.text"></td>
+               </tr>
+            </tbody>
+         </ng-container>
+      </table>-->
+
+      <table class="w-full border-separate border-spacing-0 text-sm">
+         <ng-container *ngFor="let key of Object.keys(results)">
+            <tbody class="mb-4 block">
+               <tr>
+                  <th
+                     class="bg-gray-700 text-gray-100 bg-opacity-75 font-semibold p-3 text-left rounded-t-lg"
+                     colSpan="3">
+                     {{ key }}
+                  </th>
+               </tr>
+               <tr
+                  class="bg-gray-800 text-gray-200"
+                  *ngFor="let flight of results[key]">
+                  <td class="p-3 border-b border-gray-600 rounded-bl-lg">
+                     {{ flight.queryType }}
+                  </td>
+                  <td class="p-3 border-b border-gray-600">
+                    {{ flight.reportTime | date: "d.M.Y HH:mm:ss" }}
+                  </td>
+                  <td
+                     class="p-3 border-b border-gray-600 rounded-br-lg"
+                     [appHighlightCondition]="flight.text">
+                     {{ flight.text }}
+                  </td>
+               </tr>
+            </tbody>
+         </ng-container>
+      </table>
+   </ng-container>
+
+   <ng-template #elseBlock>
+      <h2 class="text-center text-gray-100 text-2xl">No results found...</h2>
+   </ng-template>
+</div>

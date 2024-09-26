@@ -1,49 +1,111 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
-import {NgIf} from "@angular/common";
+import { Component, OnInit } from "@angular/core";
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors } from "@angular/forms";
+import { NgForOf, NgIf, UpperCasePipe } from "@angular/common";
+import { FlightBriefingService, ReportType, reportTypeKeys } from "../../services/flight-briefing.service";
+import { ClickEffectDirective } from "../../directives/click-effect.directive";
+import { EMPTY } from "rxjs";
+import { catchError, tap } from "rxjs/operators";
+
+export type IBriefingForm = {
+   metar: boolean;
+   taf_longtaf: boolean;
+   sigmet_all: boolean;
+   stations: string;
+   countries: string;
+};
 
 @Component({
-  selector: 'app-app-flight-briefing',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    NgIf
-  ],
-  templateUrl: './app-flight-briefing.component.html',
-  styleUrl: './app-flight-briefing.component.scss'
+   selector: "app-app-flight-briefing",
+   standalone: true,
+   imports: [ReactiveFormsModule, NgIf, ClickEffectDirective, FormsModule, NgForOf, UpperCasePipe],
+   templateUrl: "./app-flight-briefing.component.html",
 })
 export class AppFlightBriefingComponent implements OnInit {
-  protected briefingForm!: FormGroup;
+   protected submitError: string = "";
+   protected briefingForm!: FormGroup;
+   protected readonly reportTypeKeys = reportTypeKeys;
 
-  constructor(private readonly fb: FormBuilder) {}
+   constructor(
+      private readonly fb: FormBuilder,
+      private readonly flightBriefingService: FlightBriefingService,
+   ) {}
 
-  ngOnInit() {
-    this.briefingForm = this.fb.group({
-      metar: [false],
-      taf: [false],
-      sigmet: [false],
-      airports: [''],
-      countries: ['']
-    }, { validators: [this.atLeastOneReportValidator, this.atLeastOneLocationValidator] });
-  }
+   ngOnInit() {
+      this.briefingForm = this.fb.group(
+         {
+            metar: [false],
+            taf_longtaf: [false],
+            sigmet_all: [false],
+            stations: ["", [this.icaoCodeValidator]],
+            countries: ["", [this.wmoCodeValidator]],
+         },
+         { validators: [this.atLeastOneReportValidator, this.atLeastOneLocationValidator] },
+      );
+   }
 
-  protected atLeastOneReportValidator(group: FormGroup) {
-    const metar = group.get('metar')?.value;
-    const taf = group.get('taf')?.value;
-    const sigmet = group.get('sigmet')?.value;
-    return (metar || taf || sigmet) ? null : { atLeastOneReportRequired: true };
-  }
+   protected atLeastOneReportValidator(group: FormGroup) {
+      const metar = group.get("metar")?.value;
+      const taf = group.get("taf_longtaf")?.value;
+      const sigmet = group.get("sigmet_all")?.value;
+      return metar || taf || sigmet ? null : { atLeastOneReportRequired: true };
+   }
 
-  protected atLeastOneLocationValidator(group: FormGroup) {
-    const airports = group.get('airports')?.value;
-    const countries = group.get('countries')?.value;
-    return (airports.trim() || countries.trim()) ? null : { atLeastOneLocationRequired: true };
-  }
+   protected atLeastOneLocationValidator(group: FormGroup) {
+      const stations = group.get("stations")?.value;
+      const countries = group.get("countries")?.value;
+      return stations.trim() || countries.trim() ? null : { atLeastOneLocationRequired: true };
+   }
 
-  protected onSubmit() {
-    if (this.briefingForm.valid) {
-      // Send HTTP POST to OPMET Query JSON-RPC web service
-      console.log(this.briefingForm.value);
-    }
-  }
+   protected icaoCodeValidator({ value }: AbstractControl): ValidationErrors | null {
+      if (!value) {
+         return null;
+      }
+
+      const isValidIcao = (icao: string) => /^[A-Z]{4}$/.test(icao);
+      const icaos = value.trim().split(/\s+/);
+      const validIcaos = icaos.every(isValidIcao);
+      return validIcaos ? null : { invalidIcaoCodes: true };
+   }
+
+   protected wmoCodeValidator({ value }: AbstractControl): ValidationErrors | null {
+      if (!value) {
+         return null;
+      }
+      const isvalidWmo = (wmo: string) => /^[A-Z]{2}$/.test(wmo);
+      const wmos = value.trim().split(/\s+/);
+      const validWmos = wmos.every(isvalidWmo);
+      return validWmos ? null : { invalidWmoCodes: true };
+   }
+
+   protected onSubmit() {
+      if (!this.briefingForm.valid) {
+         return;
+      }
+
+      this.flightBriefingService
+         .submitBriefingRequest(this.briefingForm.value as IBriefingForm)
+         .pipe(
+            catchError((error) => {
+               console.error("Error submitting briefing request", error);
+               this.submitError = error?.message
+                  ? error.message
+                  : error
+                    ? error
+                    : "An error occurred while submitting the request. Please try again.";
+               return EMPTY;
+            }),
+         )
+         .subscribe();
+   }
+
+   protected getReportTypeLabel(reportType: ReportType) {
+      switch (reportType) {
+         case "metar":
+            return "METAR";
+         case "taf_longtaf":
+            return "TAF";
+         case "sigmet_all":
+            return "SIGMET";
+      }
+   }
 }
