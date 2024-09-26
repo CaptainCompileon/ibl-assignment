@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { DatePipe, formatDate, NgForOf, NgIf } from "@angular/common";
+import { DatePipe, NgForOf, NgIf } from "@angular/common";
 import { ResultQueryGroups } from "../../services/flight-briefing.service";
 import { HighlightConditionDirective } from "./highlight-condition.directive";
 

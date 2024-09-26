@@ -4,7 +4,7 @@ import { NgForOf, NgIf, UpperCasePipe } from "@angular/common";
 import { FlightBriefingService, ReportType, reportTypeKeys } from "../../services/flight-briefing.service";
 import { ClickEffectDirective } from "../../directives/click-effect.directive";
 import { EMPTY } from "rxjs";
-import { catchError, tap } from "rxjs/operators";
+import { catchError } from "rxjs/operators";
 
 export type IBriefingForm = {
    metar: boolean;
