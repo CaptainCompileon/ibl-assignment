@@ -1,4 +1,4 @@
-<div class="bg-gray-900 border-solid border-2 border-gray-700 bg-opacity-75 backdrop-blur-md rounded-lg shadow-xl p-4">
+<div class="bg-blue-smoke-800 border-solid border-2 border-blue-smoke-700 bg-opacity-75 backdrop-blur-md rounded-lg shadow-xl p-4">
    <ng-container *ngIf="results && Object.keys(results).length; else elseBlock">
       <h2 class="text-3xl font-bold my-6 text-gray-100 text-center">Pilot Briefing Product</h2>
 
@@ -7,22 +7,22 @@
             <tbody class="mb-4 block">
                <tr>
                   <th
-                     class="bg-gray-700 text-gray-100 bg-opacity-75 font-semibold p-3 text-left rounded-t-lg"
+                     class="bg-blue-smoke-700 text-gray-100 bg-opacity-75 font-semibold p-3 text-left rounded-t-lg border border-gray-600"
                      colSpan="3">
                      {{ key }}
                   </th>
                </tr>
                <tr
-                  class="bg-gray-800 text-gray-200"
+                  class="bg-blue-smoke-800 text-gray-200"
                   *ngFor="let flight of results[key]">
-                  <td class="p-3 border-b border-gray-600 rounded-bl-lg">
+                  <td class="p-3 border-b border-l border-gray-600 rounded-bl-lg">
                      {{ flight.queryType }}
                   </td>
                   <td class="p-3 border-b border-gray-600">
                     {{ flight.reportTime | date: "d.M.Y HH:mm:ss" }}
                   </td>
                   <td
-                     class="p-3 border-b border-gray-600 rounded-br-lg"
+                     class="p-3 border-b border-r border-gray-600 rounded-br-lg"
                      [appHighlightCondition]="flight.text">
                      {{ flight.text }}
                   </td>
