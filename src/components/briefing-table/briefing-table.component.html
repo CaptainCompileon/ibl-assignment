@@ -2,25 +2,6 @@
    <ng-container *ngIf="results && Object.keys(results).length; else elseBlock">
       <h2 class="text-3xl font-bold my-6 text-gray-100 text-center">Pilot Briefing Product</h2>
 
-      <!-- <table class="w-full p-2 text-gray-200">
-         <ng-container *ngFor="let key of Object.keys(results)">
-            <thead>
-               <tr class="border-2 border-slate-600 w-full">
-                  <th class="p-1 bg-primary">{{ key }}</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr class="bg-gray-700 rounded-md" *ngFor="let flight of results[key]">
-                  <td class="border rounder-md border-l-2 border-slate-600 p-1">{{ flight.queryType }}</td>
-                  <td class="border border-slate-600 rounder-md p-1">{{ flight.reportTime | date: "d.M.Y HH:mm:ss" }}</td>
-                  <td
-                     class="border border-p-2 border-slate-600 rounder-md p-1"
-                     [appHighlightCondition]="flight.text"></td>
-               </tr>
-            </tbody>
-         </ng-container>
-      </table>-->
-
       <table class="w-full border-separate border-spacing-0 text-sm">
          <ng-container *ngFor="let key of Object.keys(results)">
             <tbody class="mb-4 block">
