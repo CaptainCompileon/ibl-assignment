@@ -19,6 +19,9 @@ module.exports = {
           '900': '#2e3333',
           '950': '#171c1c',
         },
+        'dark-orange': '#805638',
+        'dark-orange-hover': '#8b5e3d',
+
 
 
       }
