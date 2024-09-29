@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors } from "@angular/forms";
-import { NgClass, NgForOf, NgIf, UpperCasePipe } from "@angular/common";
+import { NgClass, UpperCasePipe } from "@angular/common";
 import { FlightBriefingService, ReportType, REPORT_TYPE_KEYS } from "../../services/flight-briefing.service";
 import { ClickEffectDirective } from "../../directives/click-effect.directive";
 import { EMPTY } from "rxjs";
@@ -17,7 +17,7 @@ export type IBriefingForm = {
 @Component({
    selector: "app-flight-briefing",
    standalone: true,
-  imports: [ReactiveFormsModule, NgIf, ClickEffectDirective, FormsModule, NgForOf, UpperCasePipe, NgClass],
+  imports: [ReactiveFormsModule, ClickEffectDirective, FormsModule, UpperCasePipe, NgClass],
    templateUrl: "./flight-briefing.component.html",
 })
 export class FlightBriefingComponent implements OnInit {
