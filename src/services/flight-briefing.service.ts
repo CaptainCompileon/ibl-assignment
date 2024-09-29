@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Observable, BehaviorSubject } from "rxjs";
 import { map, tap } from "rxjs/operators";
 import { groupBy } from "lodash-es";
-import { IBriefingForm } from "../components/app-flight-briefing/app-flight-briefing.component";
+import { IBriefingForm } from "../components/flight-briefing/flight-briefing.component";
 
 @Injectable({
    providedIn: "root",
@@ -25,9 +25,9 @@ export class FlightBriefingService {
    }
 
    private extractRequestParams(formData: IBriefingForm): BriefingRequestParams {
-      const reportTypes: ReportType[] = reportTypeKeys
-         .filter((key) => formData[key as keyof IBriefingForm] === true)
-         .map((key: string) => key.toUpperCase() as ReportType);
+      const reportTypes: ReportType[] = REPORT_TYPE_KEYS.filter((key) => formData[key as keyof IBriefingForm] === true).map(
+         (key: string) => key.toUpperCase() as ReportType,
+      );
 
       const stations = formData.stations ? formData.stations.trim().split(/\s+/) : null;
       const countries = formData.countries ? formData.countries.trim().split(/\s+/) : null;
@@ -49,12 +49,12 @@ export class FlightBriefingService {
    }
 
    private processResponse = (response: ApiResponse): ResultQueryGroups | null => {
-     if (response?.error) {
-        this.handleError(response.error);
-        return null;
-     }
+      if (response?.error) {
+         this.handleError(response.error);
+         return null;
+      }
 
-     if (response?.result) {
+      if (response?.result) {
          const formattedResults = this.formatResults(response.result);
          return groupBy(formattedResults, "stationId") as ResultQueryGroups;
       }
@@ -77,41 +77,41 @@ export class FlightBriefingService {
    };
 }
 
-export const reportTypeKeys = ["metar", "taf_longtaf", "sigmet_all"] as const;
+export const REPORT_TYPE_KEYS = ["metar", "taf_longtaf", "sigmet_all"] as const;
 
-export type ReportType = (typeof reportTypeKeys)[number];
-export interface ResultQuery {
-  stationId: string;
-  queryType: string;
-  reportTime: string;
-  text: string;
+export type ReportType = (typeof REPORT_TYPE_KEYS)[number];
+interface ResultQuery {
+   stationId: string;
+   queryType: string;
+   reportTime: string;
+   text: string;
 }
 
 export type ResultQueryGroups = Record<string, Omit<ResultQuery, "stationId">[]>;
 
 interface BriefingRequestParams {
-  reportTypes: ReportType[];
-  stations?: string[];
-  countries?: string[];
+   reportTypes: ReportType[];
+   stations?: string[];
+   countries?: string[];
 }
 
 interface ApiRequest {
-  id: string;
-  method: string;
-  params: ({ id: string } & BriefingRequestParams)[];
+   id: string;
+   method: string;
+   params: ({ id: string } & BriefingRequestParams)[];
 }
 
 type ApiError = { code: number; message: string };
 interface ApiResponse {
-  result?: ApiResult[];
-  error?: ApiError | null;
-  [key: string]: unknown;
+   result?: ApiResult[];
+   error?: ApiError | null;
+   [key: string]: unknown;
 }
 
 interface ApiResult {
-  stationId: string;
-  queryType: string;
-  reportTime: string;
-  text: string;
-  [key: string]: unknown;
+   stationId: string;
+   queryType: string;
+   reportTime: string;
+   text: string;
+   [key: string]: unknown;
 }

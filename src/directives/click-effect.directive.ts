@@ -8,7 +8,6 @@ export class ClickEffectDirective {
 
   constructor(private renderer: Renderer2) { }
 
-  // Listen to document-wide click events
   @HostListener('click', ['$event'])
   clickEffect(e: MouseEvent) {
     // Create a new div element for the effect div

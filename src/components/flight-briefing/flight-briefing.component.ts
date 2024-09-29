@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors } from "@angular/forms";
 import { NgClass, NgForOf, NgIf, UpperCasePipe } from "@angular/common";
-import { FlightBriefingService, ReportType, reportTypeKeys } from "../../services/flight-briefing.service";
+import { FlightBriefingService, ReportType, REPORT_TYPE_KEYS } from "../../services/flight-briefing.service";
 import { ClickEffectDirective } from "../../directives/click-effect.directive";
 import { EMPTY } from "rxjs";
 import { catchError } from "rxjs/operators";
@@ -15,15 +15,15 @@ export type IBriefingForm = {
 };
 
 @Component({
-   selector: "app-app-flight-briefing",
+   selector: "app-flight-briefing",
    standalone: true,
   imports: [ReactiveFormsModule, NgIf, ClickEffectDirective, FormsModule, NgForOf, UpperCasePipe, NgClass],
-   templateUrl: "./app-flight-briefing.component.html",
+   templateUrl: "./flight-briefing.component.html",
 })
-export class AppFlightBriefingComponent implements OnInit {
+export class FlightBriefingComponent implements OnInit {
    protected submitError: string = "";
    protected briefingForm!: FormGroup;
-   protected readonly reportTypeKeys = reportTypeKeys;
+   protected readonly reportTypeKeys = REPORT_TYPE_KEYS;
 
    constructor(
       private readonly fb: FormBuilder,
